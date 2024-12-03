@@ -1,0 +1,10 @@
+// jsconfig配置src为@
+
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
