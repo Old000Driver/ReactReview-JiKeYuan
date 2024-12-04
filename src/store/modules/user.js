@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { request, setToken as _setToken, getToken, removeToken } from "@/utils";
+import { loginAPI, getProfileAPI } from "@/apis/user";
 
 const userStore = createSlice({
   name: "user",
@@ -30,15 +31,15 @@ const userReducer = userStore.reducer;
 
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
-    const res = await request.post("authorizations", loginForm);
+    const res = await loginAPI(loginForm);
     console.log("res", res);
     dispatch(setToken(res.data.data.token));
   };
 };
 
-const fetchUserInfo = (loginForm) => {
+const fetchUserInfo = () => {
   return async (dispatch) => {
-    const res = await request.get("/user/profile");
+    const res = await getProfileAPI();
     console.log("fetchUserInfo-res", res);
     dispatch(setUerInfo(res.data.data));
   };
