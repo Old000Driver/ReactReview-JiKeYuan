@@ -18,20 +18,13 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState, useEffect } from "react";
 import { createArticleAPI, getChannelAPI } from "@/apis/article";
+import { useChannel } from "@/hooks/useChannel";
 
 const { Option } = Select;
 
 const Publish = () => {
   const [form] = Form.useForm();
-  const [channelList, setChannelList] = useState([]);
-  useEffect(() => {
-    const getChannelList = async () => {
-      const res = await getChannelAPI();
-      console.log("resCC", res);
-      setChannelList(res.data.data.channels);
-    };
-    getChannelList();
-  }, []);
+  const { channelList } = useChannel();
 
   const onFinish = (formValue) => {
     console.log("formValue", formValue);

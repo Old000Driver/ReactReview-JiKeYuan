@@ -16,6 +16,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 // import "moment/locale/zh-cn";
 import locale from "antd/es/date-picker/locale/zh_CN";
 import "./index.scss";
+import { useChannel } from "@/hooks/useChannel";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -31,7 +32,6 @@ const Article = () => {
       render: (cover) => {
         // return <img src={cover || img404} width={80} height={60} alt="" />;
         return <img src={cover} width={80} height={60} alt="" />;
-
       },
     },
     {
@@ -92,6 +92,8 @@ const Article = () => {
       title: "wkwebview离线化加载h5资源解决方案",
     },
   ];
+
+  useChannel();
 
   return (
     <div>
