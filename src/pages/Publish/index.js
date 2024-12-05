@@ -16,11 +16,12 @@ import "./index.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState, useEffect } from "react";
-import { getChannelAPI } from "@/apis/article";
+import { createArticleAPI, getChannelAPI } from "@/apis/article";
 
 const { Option } = Select;
 
 const Publish = () => {
+  const [form] = Form.useForm();
   const [channelList, setChannelList] = useState([]);
   useEffect(() => {
     const getChannelList = async () => {
@@ -30,6 +31,28 @@ const Publish = () => {
     };
     getChannelList();
   }, []);
+
+  const onFinish = (formValue) => {
+    console.log("formValue", formValue);
+    const { title, content, channel_id } = formValue;
+    const reqData = {
+      title,
+      content,
+      cover: {
+        type: 0,
+        images: [],
+      },
+      channel_id,
+    };
+    createArticleAPI(reqData);
+  };
+
+  const [imagesList, setImageList] = useState([]);
+  const onChange = (value) => {
+    console.log("上传中", value);
+    setImageList(value.fileList);
+  };
+
   return (
     <div className="publish">
       <Card
@@ -49,6 +72,8 @@ const Publish = () => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
+          form={form}
+          onFinish={onFinish}
         >
           <Form.Item
             label="标题"
@@ -88,7 +113,9 @@ const Publish = () => {
               name="image"
               listType="picture-card"
               className="avatar-uploader"
+              action={"http://geek.itheima.net/v1_0/upload"}
               showUploadList
+              onChange={onChange}
             >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
