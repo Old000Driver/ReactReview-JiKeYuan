@@ -15,20 +15,34 @@ import "./index.scss";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useState, useEffect } from "react";
+import { getChannelAPI } from "@/apis/article";
 
 const { Option } = Select;
 
 const Publish = () => {
+  const [channelList, setChannelList] = useState([]);
+  useEffect(() => {
+    const getChannelList = async () => {
+      const res = await getChannelAPI();
+      console.log("resCC", res);
+      setChannelList(res.data.data.channels);
+    };
+    getChannelList();
+  }, []);
   return (
     <div className="publish">
       <Card
         title={
-          <Breadcrumb separator=">">
-            <Breadcrumb.Item>
-              <Link to="/">首页</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>发布文章</Breadcrumb.Item>
-          </Breadcrumb>
+          // <Breadcrumb separator=">">
+          //   <Breadcrumb.Item>
+          //     <Link to="/">首页</Link>
+          //   </Breadcrumb.Item>
+          //   <Breadcrumb.Item>发布文章</Breadcrumb.Item>
+          // </Breadcrumb>
+          <Breadcrumb
+            items={[{ title: <Link to="/">首页</Link> }, { title: "发布文章" }]}
+          />
         }
       >
         <Form
@@ -49,7 +63,16 @@ const Publish = () => {
             rules={[{ required: true, message: "请选择文章频道" }]}
           >
             <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-              <Option value={0}>推荐</Option>
+              {
+                /* 便利channelLIst渲染列表 */
+                channelList.map((item) => {
+                  return (
+                    <Option key={item.id} value={item.id}>
+                      {item.name}
+                    </Option>
+                  );
+                })
+              }
             </Select>
           </Form.Item>
 
