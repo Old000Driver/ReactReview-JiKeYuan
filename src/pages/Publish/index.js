@@ -8,6 +8,7 @@ import {
   Upload,
   Space,
   Select,
+  message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -34,13 +35,15 @@ const Publish = () => {
 
   const onFinish = (formValue) => {
     console.log("formValue", formValue);
+    if (imagesList.length !== imageType)
+      return message.warning("封面类型和图片数量不匹配");
     const { title, content, channel_id } = formValue;
     const reqData = {
       title,
       content,
       cover: {
-        type: 0,
-        images: [],
+        type: imageType,
+        images: imagesList.map((item) => item.response.data.url),
       },
       channel_id,
     };
@@ -51,6 +54,12 @@ const Publish = () => {
   const onChange = (value) => {
     console.log("上传中", value);
     setImageList(value.fileList);
+  };
+
+  const [imageType, setImageType] = useState(0);
+  const onTypeChange = (e) => {
+    console.log("切换封面了", e.target.value);
+    setImageType(e.target.value);
   };
 
   return (
@@ -103,24 +112,27 @@ const Publish = () => {
 
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group>
+              <Radio.Group onChange={onTypeChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
               </Radio.Group>
             </Form.Item>
-            <Upload
-              name="image"
-              listType="picture-card"
-              className="avatar-uploader"
-              action={"http://geek.itheima.net/v1_0/upload"}
-              showUploadList
-              onChange={onChange}
-            >
-              <div style={{ marginTop: 8 }}>
-                <PlusOutlined />
-              </div>
-            </Upload>
+            {imageType !== 0 && (
+              <Upload
+                name="image"
+                listType="picture-card"
+                className="avatar-uploader"
+                action={"http://geek.itheima.net/v1_0/upload"}
+                showUploadList
+                onChange={onChange}
+                maxCount={imageType}
+              >
+                <div style={{ marginTop: 8 }}>
+                  <PlusOutlined />
+                </div>
+              </Upload>
+            )}
           </Form.Item>
           <Form.Item
             label="内容"
