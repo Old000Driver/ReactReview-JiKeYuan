@@ -17,6 +17,8 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import locale from "antd/es/date-picker/locale/zh_CN";
 import "./index.scss";
 import { useChannel } from "@/hooks/useChannel";
+import { useEffect, useState } from "react";
+import { getArticleAPI } from "@/apis/article";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -31,7 +33,7 @@ const Article = () => {
       width: 120,
       render: (cover) => {
         // return <img src={cover || img404} width={80} height={60} alt="" />;
-        return <img src={cover} width={80} height={60} alt="" />;
+        return <img src={cover?.images[0]} width={80} height={60} alt="" />;
       },
     },
     {
@@ -95,6 +97,22 @@ const Article = () => {
 
   useChannel();
 
+  const [list, setList] = useState([]);
+  const [count, setCount] = useState(0);
+
+  let useEffected = false;
+  useEffect(() => {
+    if (useEffected) return;
+    useEffected = true;
+    async function getList(params) {
+      const res = await getArticleAPI(params);
+      console.log('res33',res);
+      setList(res.data.data.results);
+      setCount(res.data.data.total_count);
+    }
+    getList();
+  }, []);
+
   return (
     <div>
       <Card
@@ -142,8 +160,8 @@ const Article = () => {
           </Form.Item>
         </Form>
       </Card>
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
+        <Table rowKey="id" columns={columns} dataSource={list} />
       </Card>
     </div>
   );

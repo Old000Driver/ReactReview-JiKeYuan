@@ -36,7 +36,7 @@ request.interceptors.response.use(
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
     console.dir(error);
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       removeToken();
       router.navigate("/login");
       window.location.reload();
