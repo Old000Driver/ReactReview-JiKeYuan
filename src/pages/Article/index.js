@@ -84,38 +84,68 @@ const Article = () => {
     },
   ];
 
-  const data = [
-    {
-      id: "8218",
-      comment_count: 0,
-      cover: {
-        images: ["http://geek.itheima.net/resources/images/15.jpg"],
-      },
-      like_count: 0,
-      pubdate: "2019-03-11 09:00:00",
-      read_count: 2,
-      status: 2,
-      title: "wkwebview离线化加载h5资源解决方案",
-    },
-  ];
+  // const data = [
+  //   {
+  //     id: "8218",
+  //     comment_count: 0,
+  //     cover: {
+  //       images: ["http://geek.itheima.net/resources/images/15.jpg"],
+  //     },
+  //     like_count: 0,
+  //     pubdate: "2019-03-11 09:00:00",
+  //     read_count: 2,
+  //     status: 2,
+  //     title: "wkwebview离线化加载h5资源解决方案",
+  //   },
+  // ];
 
   useChannel();
 
   const [list, setList] = useState([]);
   const [count, setCount] = useState(0);
 
-  let useEffected = false;
+  const [reqData, setReqData] = useState({
+    status: "",
+    channel_id: "",
+    begin_pubdate: "",
+    end_pubdate: "",
+    page: 1,
+    per_page: 15,
+  });
+  // let useEffected = false;
+
   useEffect(() => {
-    if (useEffected) return;
-    useEffected = true;
-    async function getList(params) {
-      const res = await getArticleAPI(params);
-      console.log("res33", res);
+    // if (useEffected) return;
+    // useEffected = true;
+    async function getList() {
+      console.log("params", reqData);
+      const res = await getArticleAPI(reqData);
+      // console.log("res33", res);
       setList(res.data.data.results);
       setCount(res.data.data.total_count);
     }
     getList();
-  }, []);
+  }, [reqData]);
+
+  const onFinish = (formValue) => {
+    console.log("fff", formValue);
+    setReqData({
+      ...reqData,
+      status: formValue.status,
+      channel_id: formValue.channel_id,
+      begin_pubdate: formValue.date[0].format("YYYY-MM-DD"),
+      end_pubdate: formValue.date[1].format("YYYY-MM-DD"),
+      // page: formValue.page,
+      // per_page: formValue.per_page,
+    });
+  };
+
+  const onPageChange = (page) => {
+    setReqData({
+      ...reqData,
+      page,
+    });
+  };
 
   return (
     <div>
@@ -130,7 +160,7 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: null }}>
+        <Form initialValues={{ status: null }} onFinish={onFinish}>
           <Form.Item label="状态" name="status">
             <Radio.Group>
               <Radio value={null}>全部</Radio>
@@ -165,7 +195,16 @@ const Article = () => {
         </Form>
       </Card>
       <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={list} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={list}
+          pagination={{
+            total: count,
+            pageSize: reqData.per_page,
+            onChange: onPageChange,
+          }}
+        />
       </Card>
     </div>
   );
