@@ -10,7 +10,7 @@ function useChannel() {
     };
     getChannelList();
   }, []);
-  return channelList;
+  return { channelList };
 }
 
 export { useChannel };

@@ -26,6 +26,10 @@ const { RangePicker } = DatePicker;
 // import img404 from "@/assets/error.png";
 
 const Article = () => {
+  const status = {
+    1: <Tag color="warning">待审核</Tag>,
+    2: <Tag color="green">审核通过</Tag>,
+  };
   const columns = [
     {
       title: "封面",
@@ -44,7 +48,7 @@ const Article = () => {
     {
       title: "状态",
       dataIndex: "status",
-      render: (data) => <Tag color="green">审核通过</Tag>,
+      render: (data) => status[data],
     },
     {
       title: "发布时间",
@@ -106,7 +110,7 @@ const Article = () => {
     useEffected = true;
     async function getList(params) {
       const res = await getArticleAPI(params);
-      console.log('res33',res);
+      console.log("res33", res);
       setList(res.data.data.results);
       setCount(res.data.data.total_count);
     }
