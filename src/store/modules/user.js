@@ -1,49 +1,58 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { request, setToken as _setToken, getToken, removeToken } from "@/utils";
-import { loginAPI, getProfileAPI } from "@/apis/user";
+// 和用户相关的状态管理
+
+import { createSlice } from '@reduxjs/toolkit'
+import { setToken as _setToken, getToken, removeToken } from '@/utils'
+import { loginAPI, getProfileAPI } from '@/apis/user'
 
 const userStore = createSlice({
   name: "user",
+  // 数据状态
   initialState: {
-    token: getToken() || "",
-    userInfo: {},
+    token: getToken() || '',
+    userInfo: {}
   },
+  // 同步修改方法
   reducers: {
-    setToken(state, action) {
-      state.token = action.payload;
-      // console.log("test222", action.payload, action);
-      // localStorage.setItem("token_key", JSON.stringify(action.payload));
-      _setToken(action.payload);
+    setToken (state, action) {
+      state.token = action.payload
+      _setToken(action.payload)
     },
-    setUerInfo(state, action) {
-      state.userInfo = action.payload;
+    setUserInfo (state, action) {
+      state.userInfo = action.payload
     },
-    clearUserInfo(state) {
-      state.token = "";
-      state.userInfo = {};
-      removeToken();
-    },
-  },
-});
+    clearUserInfo (state) {
+      state.token = ''
+      state.userInfo = {}
+      removeToken()
+    }
+  }
+})
 
-const { setToken, setUerInfo, clearUserInfo } = userStore.actions;
-const userReducer = userStore.reducer;
 
+// 解构出actionCreater
+
+const { setToken, setUserInfo, clearUserInfo } = userStore.actions
+
+// 获取reducer函数
+
+const userReducer = userStore.reducer
+
+// 登录获取token异步方法封装
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
-    const res = await loginAPI(loginForm);
-    console.log("res", res);
-    dispatch(setToken(res.data.data.token));
-  };
-};
+    const res = await loginAPI(loginForm)
+    dispatch(setToken(res.data.token))
+  }
+}
 
+// 获取个人用户信息异步方法
 const fetchUserInfo = () => {
   return async (dispatch) => {
-    const res = await getProfileAPI();
-    console.log("fetchUserInfo-res", res);
-    dispatch(setUerInfo(res.data.data));
-  };
-};
+    const res = await getProfileAPI()
+    dispatch(setUserInfo(res.data))
+  }
+}
 
-export { fetchLogin, fetchUserInfo, setToken, clearUserInfo };
-export default userReducer;
+export { fetchLogin, fetchUserInfo, clearUserInfo }
+
+export default userReducer

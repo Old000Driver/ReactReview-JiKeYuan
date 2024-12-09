@@ -1,7 +1,11 @@
-import { Button } from "antd";
 
-function App() {
-  return <div>this is App  <Button>123</Button></div>;
+function App () {
+  const clickHandler = () => {
+    console.log('button按钮点击了')
+  }
+  return (
+    <button onClick={clickHandler}></button>
+  )
 }
 
-export default App;
+export default App

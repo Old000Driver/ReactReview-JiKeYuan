@@ -1,47 +1,51 @@
-import { Card, message } from "antd";
-import logo from "@/assets/logo.png";
-import "./index.scss";
-import { Form, Input, Button } from "antd";
-import { useDispatch } from "react-redux";
-import { fetchLogin } from "@/store/modules/user";
-import { useNavigate } from "react-router-dom";
+import './index.scss'
+import { Card, Form, Input, Button, message } from 'antd'
+import logo from '@/assets/logo.png'
+import { useDispatch } from 'react-redux'
+import { fetchLogin } from '@/store/modules/user'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const onFinish = async (formValue) => {
-    console.log("formValue", formValue);
-    await dispatch(fetchLogin(formValue));
-    navigate("/");
-    message.success("登录成功");
-  };
-
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const onFinish = async (values) => {
+    console.log(values)
+    // 触发异步action fetchLogin
+    await dispatch(fetchLogin(values))
+    // 1. 跳转到首页
+    navigate('/')
+    // 2. 提示一下用户
+    message.success('登录成功')
+  }
   return (
     <div className="login">
       <Card className="login-container">
         <img className="login-logo" src={logo} alt="" />
         {/* 登录表单 */}
-        <Form validateTrigger={["onBlur", "onChange"]} onFinish={onFinish}>
+        <Form onFinish={onFinish} validateTrigger="onBlur">
           <Form.Item
             name="mobile"
+            // 多条校验逻辑 先校验第一条 第一条通过之后再校验第二条
             rules={[
               {
-                pattern: /^1[3-9]\d{9}$/,
-                message: "手机号码格式不对",
-                validateTrigger: "onBlur",
+                required: true,
+                message: '请输入手机号',
               },
-              { required: true, message: "请输入手机号" },
-            ]}
-          >
+              {
+                pattern: /^1[3-9]\d{9}$/,
+                message: '请输入正确的手机号格式'
+              }
+            ]}>
             <Input size="large" placeholder="请输入手机号" />
           </Form.Item>
           <Form.Item
             name="code"
             rules={[
-              { required: true, message: "请输入验证码" },
-              { len: 6, message: "验证码6个字符", validateTrigger: "onBlur" },
-            ]}
-          >
+              {
+                required: true,
+                message: '请输入验证码',
+              },
+            ]}>
             <Input size="large" placeholder="请输入验证码" />
           </Form.Item>
           <Form.Item>
@@ -52,7 +56,7 @@ const Login = () => {
         </Form>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

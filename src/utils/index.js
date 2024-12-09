@@ -1,6 +1,13 @@
-// 中转请求方法
-// import { request } from "@/utils/request";
-import { request } from "./request";
-import { getToken, setToken, removeToken } from "@/utils/token";
+// 统一中转工具模块函数
+// import {request} from '@/utils'
 
-export { request, getToken, setToken, removeToken };
+import { request } from './request'
+
+import { setToken, getToken, removeToken } from './token'
+
+export {
+  request,
+  setToken,
+  getToken,
+  removeToken
+}
