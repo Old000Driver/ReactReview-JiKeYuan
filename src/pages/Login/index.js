@@ -36,7 +36,7 @@ const Login = () => {
                 message: '请输入正确的手机号格式'
               }
             ]}>
-            <Input size="large" placeholder="请输入手机号" />
+            <Input size="large" placeholder="请输入手机号(13800000002)" />
           </Form.Item>
           <Form.Item
             name="code"
@@ -46,7 +46,7 @@ const Login = () => {
                 message: '请输入验证码',
               },
             ]}>
-            <Input size="large" placeholder="请输入验证码" />
+            <Input size="large" placeholder="请输入验证码(246810)" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" size="large" block>
